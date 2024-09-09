@@ -1,0 +1,26 @@
+{
+    "manifest_version": 3,
+    "name": "Gorilla Translator",
+    "version": "1.0",
+    "description": "ブラウザ上の文章をゴリラっぽく変換します。",
+    "permissions": ["activeTab", "scripting"],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["kuromoji.js", "dict/*.dat.gz"],
+        "matches": ["<all_urls>"]
+      }
+    ],
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+      }
+    ]
+  }
+  
