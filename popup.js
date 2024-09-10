@@ -58,13 +58,9 @@ document.getElementById("translateButton").addEventListener("click", function ()
 
           
           const analyzedText = tokens.map(token => {
-            if (token.word_type === 'UNKNOWN') {
-                return `<span style="border: 1px solid #000; margin: 2px; padding: 2px;">
-                          te
-                          <small>(${token.pos})</small>
-                        </span>`;
-              }
-            if (token.pos === '記号') {
+            
+            if  (token.pos === '名詞'){
+              console.log('名詞を発見しました'); 
               return `<span style="border: 1px solid #000; margin: 2px; padding: 2px;">
                         te
                         <small>(${token.pos})</small>
@@ -76,9 +72,6 @@ document.getElementById("translateButton").addEventListener("click", function ()
                       </span>`;
             }
           }).join('');
-
-
-  
 
           
           const spanWrapper = document.createElement('span');
