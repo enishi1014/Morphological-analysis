@@ -3,7 +3,12 @@
     "name": "Gorilla Translator",
     "version": "1.0",
     "description": "ブラウザ上の文章をゴリラっぽく変換します。",
-    "permissions": ["activeTab", "scripting"],
+    "permissions": [
+      "activeTab",
+      "contextMenus",
+      "scripting",
+      "tabs"
+    ],
     "background": {
       "service_worker": "background.js"
     },
