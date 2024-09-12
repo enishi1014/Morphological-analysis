@@ -45,16 +45,20 @@ function replaceAuxiliaryVerbsWithUho() {
         const tokens = tokenizer.tokenize(originalText);
 
         tokens.forEach(token => {
-          console.log(token);  
+          // console.log(token);  
         });
 
         var newtokens = [];
+        tokens.push({surface_form: ''});
         for (let i = 0; i < tokens.length; i++) {
-          // console.log(tokens[i]);
-          if (tokens[i] === undefined || tokens[i+1] === undefined || tokens[i+2] === undefined){
+          console.log(tokens[i]);
+          if (tokens[i].surface_form === ''){
+            break;
+          }else if (tokens[i] === undefined || tokens[i+1] === undefined || tokens[i+2] === undefined){
             newtokens.push(tokens[i].surface_form);
             continue;
-          }else if (norn_first_asshi(tokens[i].surface_form)){
+          }
+          if (norn_first_asshi(tokens[i].surface_form)){
             // 一人称→あっし
             newtokens.push('あっし');
           }else if (norn_second_omee(tokens[i].surface_form)){
@@ -112,6 +116,12 @@ function replaceAuxiliaryVerbsWithUho() {
               i += 1;
             }else if (tokens[i+1].surface_form === 'しま' && tokens[i+1].pos === '動詞'){
               newtokens.push("ちま");
+              i += 1;
+            }else if (tokens[i+1].surface_form === 'しまっ' && tokens[i+1].pos === '動詞'){
+              newtokens.push("ちまっ");
+              i += 1;
+            }else if (tokens[i+1].surface_form === 'しまい' && tokens[i+1].pos === '動詞'){
+              newtokens.push("ちまい");
               i += 1;
             }else{
               newtokens.push(tokens[i].surface_form);
@@ -224,7 +234,7 @@ function replaceAuxiliaryVerbsWithUho() {
                      tokens[i + 1].pos === '助動詞'
                     ) {
             // 名詞 + 助動詞「だ」「です」→ 名詞 + 「でい」
-            if (tokens[i + 2] && (tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n')) {
+            if (tokens[i + 2] && (tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n' || tokens[i + 2].surface_form === '')) {
               newtokens.push(tokens[i].surface_form); 
               newtokens.push('でい');
               i += 1; 
@@ -238,14 +248,14 @@ function replaceAuxiliaryVerbsWithUho() {
               newtokens.push(tokens[i + 1].surface_form);
               i += 1;
             }
-          }else if (tokens[i].pos === "名詞" && (tokens[i + 1].surface_form === '！' || tokens[i + 1].surface_form === '。' || tokens[i + 1].surface_form === '\n')){
+          }else if (tokens[i].pos === "名詞" && (tokens[i + 1].surface_form === '！' || tokens[i + 1].surface_form === '。' || tokens[i + 1].surface_form === '\n' || tokens[i + 1].surface_form === '')){
             // 文末かつ（名詞）→（名詞）でい
             newtokens.push(tokens[i].surface_form);
             newtokens.push('でい');
           }else if (tokens[i].pos === "助動詞" && tokens[i].basic_form === "です" && 
-            (!(tokens[i + 1].surface_form === '！' || tokens[i + 1].surface_form === '。' || tokens[i + 1].surface_form === '\n') ||
-            !(tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n') ||
-            (tokens[i + 3]  && !(tokens[i + 3].surface_form === '！' || tokens[i + 3].surface_form === '。' || tokens[i + 3].surface_form === '\n')))
+            (!(tokens[i + 1].surface_form === '！' || tokens[i + 1].surface_form === '。' || tokens[i + 1].surface_form === '\n' || tokens[i + 1].surface_form === '') ||
+            !(tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n' || tokens[i + 2].surface_form === '') ||
+            (tokens[i + 3]  && !(tokens[i + 3].surface_form === '！' || tokens[i + 3].surface_form === '。' || tokens[i + 3].surface_form === '\n' || tokens[i + 3].surface_form === '')))
           ){
             // （文末ではない）かつ　助動詞　かつ　基本形＝「です」→「で」を「でごぜぇま」に置き換え
             if (tokens[i].surface_form === 'です'){
@@ -257,7 +267,14 @@ function replaceAuxiliaryVerbsWithUho() {
             }else {
               newtokens.push(tokens[i].surface_form);
             }
-          }else{
+          }else if (tokens[i].pos === "動詞" && tokens[i].conjugated_type === "一段" &&
+            tokens[i + 1].basic_form === "た" && tokens[i + 1].pos === "助動詞" && 
+            (tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n' || tokens[i + 2].surface_form === '')
+          ){
+            // 文末　かつ　（動詞　かつ　一段活用）＋（助動詞「た」）→「た」を「やした」に置き換え
+            newtokens.push(tokens[i].surface_form);
+            newtokens.push('やし');
+          }else if (tokens[i].surface_form !== '*'){
             newtokens.push(tokens[i].surface_form);
           }
         }
