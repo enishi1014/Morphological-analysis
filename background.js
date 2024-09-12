@@ -188,6 +188,59 @@ function replaceAuxiliaryVerbsWithUho() {
             // 〜ください→〜くだせぇ
             // // 動詞かつ読み方が「クダサイ」→「くだせぇ」に置き換え
             newtokens.push('くだせぇ');
+          }else if (tokens[i].surface_form === 'という' && tokens[i].pos === '助詞') {
+            // 助詞「という」→「ってぇ」
+            newtokens.push('ってぇ');
+          } else if (tokens[i].surface_form === 'と' && tokens[i].pos === '助詞' && tokens[i + 1].surface_form === 'の' && tokens[i + 1].pos === '助詞') {
+            // 引用の助詞「と」＋助詞「の」→「ってぇ」
+            newtokens.push('っ');
+            newtokens.push('てぇ');
+            i += 1;
+          } else if (tokens[i].surface_form === 'を' && tokens[i].pos === '助詞' && tokens[i + 1].surface_form === '、' && tokens[i + 1].pos === '記号') {
+            // 助詞「を」＋記号「、」→「をだな、」
+            newtokens.push('をだな');
+            newtokens.push('、');
+            i += 1;
+          } else if (tokens[i].pos === '動詞' && tokens[i + 1].surface_form === 'たい' && tokens[i + 1].pos === '助動詞') {
+            // 動詞＋助動詞「たい」→動詞＋「てぇ」
+            newtokens.push(tokens[i].surface_form);
+            newtokens.push('てぇ');
+            i += 1;
+          }else if (tokens[i].surface_form === 'ござい' && tokens[i].pos === '助動詞') {
+            // 助動詞「ござい」→「ごぜぇ」
+            newtokens.push('ごぜぇ');
+          } else if (tokens[i].surface_form === 'たく' && tokens[i].pos === '助動詞' && tokens[i + 1].surface_form === 'ない' && tokens[i + 1].pos === '助動詞') {
+            // 助動詞「たく」＋助動詞「ない」→「たかぁねぇ」
+            newtokens.push('たかぁ');
+            newtokens.push('ねぇ');
+            i += 1;
+          } else if (tokens[i].surface_form === 'ござい' && tokens[i].pos === '助動詞') {
+            // 助動詞「ござい」→「ごぜぇ」
+            newtokens.push('ごぜぇ');
+          } else if (tokens[i].surface_form === 'たく' && tokens[i].pos === '助動詞' && tokens[i + 1].surface_form === 'ない' && tokens[i + 1].pos === '助動詞') {
+            // 助動詞「たく」＋助動詞「ない」→「たかぁねぇ」
+            newtokens.push('たかぁ');
+            newtokens.push('ねぇ');
+            i += 1;
+          } else if (tokens[i].pos === '名詞' && 
+                     (tokens[i + 1].surface_form === 'だ' || tokens[i + 1].surface_form === 'です') && 
+                     tokens[i + 1].pos === '助動詞'
+                    ) {
+            // 名詞 + 助動詞「だ」「です」→ 名詞 + 「でい」
+            if (tokens[i + 2] && (tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n')) {
+              newtokens.push(tokens[i].surface_form); 
+              newtokens.push('でい');
+              i += 1; 
+            } else if (tokens[i + 2] && tokens[i + 2].pos === '終助詞') {
+              // 助動詞「だ」「です」＋終助詞の場合も「でい」に変換
+              newtokens.push(tokens[i].surface_form);
+              newtokens.push('でい');
+              i += 2;  
+            } else {
+              newtokens.push(tokens[i].surface_form);
+              newtokens.push(tokens[i + 1].surface_form);
+              i += 1;
+            }
           }else{
             newtokens.push(tokens[i].surface_form);
           }
