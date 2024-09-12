@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Gorilla Translator",
+    "name": "textval",
     "version": "1.0",
-    "description": "ブラウザ上の文章をゴリラっぽく変換します。",
+    "description": "ブラウザ上の文章をお祭りっぽく変換します。",
     "permissions": [
       "activeTab",
       "contextMenus",
@@ -26,6 +26,12 @@
         "matches": ["<all_urls>"],
         "js": ["content.js"]
       }
-    ]
+    ],
+    "icons": {
+      "16": "kakigori-kun-16.png",
+      "32": "kakigori-kun-32.png",
+      "48": "kakigori-kun-48.png",
+      "128": "kakigori-kun-128.png"
+    }
   }
   
