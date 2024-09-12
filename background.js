@@ -38,54 +38,6 @@ function replaceAuxiliaryVerbsWithUho() {
         return 1;
       }
     }
-    // 三人称→◯◯の旦那(済)
-
-    // 〜ています→〜とります(済)
-    // // 接続助詞「て」＋（助動詞かつ基本形が「ます」→「て」を「とり」に置き換え
-    // // 接続助詞「て」＋動詞「い」＋（助動詞かつ基本形が「ます」）→（「て」＋「い」）を「とり」に置き換え
-
-    // 〜でいます→〜どります(済)
-    // // 接続助詞「で」＋（助動詞かつ基本形が「ます」）→「で」を「どり」に置き換え
-    // // 接続助詞「で」＋動詞「い」＋（助動詞かつ基本形が「ます」）→（「で」＋「い」）を「どり」に置き換え
-
-    // 〜ます→〜やす
-    // // 助動詞かつ（基本形が「ます」）→「ま」を「や」に置き換え
-
-    // 〜ない→〜ねぇ
-    // //（助動詞or形容詞）かつ（読み方が「ナイ」）→「ねぇ」に置き換え
-
-    // 〜ください→〜くだせぇ
-    // // 動詞かつ読み方が「クダサイ」→「くだせぇ」に置き換え
-
-    // 〜てしまう、〜ちゃう→〜ちまう、〜やがる
-    // // 動詞かつ　基本形が「ちゃう」→「ちゃ」を「ちま」に置き換え
-    // // 助詞「て」＋（動詞かつ　基本形が「しまう」）→「しま」を「ちま」に置き換え
-
-    // --------------------------------------------------------------------------------------------
-
-    // （名詞）だ、（名詞）です→（名詞）でい、（名詞）よ
-    // // 文末かつ　（名詞）＋（助動詞「だ」）→（名詞）＋「でい」
-    // // 文末かつ　（名詞）＋（助動詞「です」）→（名詞）＋「でい」
-    // // 文末かつ　（名詞）＋（助動詞「だ」+ 任意の終助詞１つ）→（名詞）＋「でい」
-    // // 文末かつ　（名詞）＋（助動詞「です」+ 任意の終助詞１つ）→（名詞）＋「でい」
-    // ※（感嘆符 or 「。」 or 改行）が次に来ていたら、とりあえず文末と判断するイメージ...？
-    // ※終助詞は「ぜ」「よ」みたいなやつです
-
-    // 〜という、〜との→〜ってぇ
-    // // 助詞「という」→「ってぇ」
-    // // 引用の助詞「と」＋助詞「の」→「ってぇ」
-
-    // （目的語の名詞）を、→（目的語の名詞）をだな、
-    // // 助詞「を」＋記号「、」→「をだな、」に置き換え
-
-    // （※願望の意味あいで）〜たい→〜てぇ
-    // // 動詞＋助動詞「たい」→動詞＋「てぇ」
-
-    // ござい→ごぜぇ
-    // // 助動詞「ござい」→「ごぜぇ」
-
-    // 〜たくない→〜たかぁねぇ
-    // // 助動詞「たく」＋助動詞「ない」→「たかぁねぇ」
 
     textNodes.forEach(textNode => {
       const originalText = textNode.nodeValue.trim();
@@ -121,6 +73,12 @@ function replaceAuxiliaryVerbsWithUho() {
               newtokens.push('り');
               if (tokens[i+1].surface_form === 'ます' && tokens[i+1].pos === '助動詞'){
                 newtokens.push('やす');
+              }else if (tokens[i+1].surface_form === 'まし' && tokens[i+1].pos === '助動詞'){
+                // 〜ました→〜やした
+                newtokens.push('やし');
+              }else if (tokens[i+1].surface_form === 'ませ' && tokens[i+1].pos === '助動詞'){
+                // 〜ません→〜やせん
+                newtokens.push('やせ');
               } else {
                 newtokens.push(tokens[i+1].surface_form);
               }
@@ -131,6 +89,12 @@ function replaceAuxiliaryVerbsWithUho() {
                 newtokens.push('り');
                 if (tokens[i+2].surface_form === 'ます' && tokens[i+2].pos === '助動詞'){
                   newtokens.push('やす');
+                }else if (tokens[i+2].surface_form === 'まし' && tokens[i+2].pos === '助動詞'){
+                  // 〜ました→〜やした
+                  newtokens.push('やし');
+                }else if (tokens[i+2].surface_form === 'ませ' && tokens[i+2].pos === '助動詞'){
+                  // 〜ません→〜やせん
+                  newtokens.push('やせ');
                 } else {
                   newtokens.push(tokens[i+2].surface_form);
                 }
@@ -156,6 +120,12 @@ function replaceAuxiliaryVerbsWithUho() {
               newtokens.push('り');
               if (tokens[i+1].surface_form === 'ます' && tokens[i+1].pos === '助動詞'){
                 newtokens.push('やす');
+              }else if (tokens[i+1].surface_form === 'まし' && tokens[i+1].pos === '助動詞'){
+                // 〜ました→〜やした
+                newtokens.push('やし');
+              }else if (tokens[i+1].surface_form === 'ませ' && tokens[i+1].pos === '助動詞'){
+                // 〜ません→〜やせん
+                newtokens.push('やせ');
               } else {
                 newtokens.push(tokens[i+1].surface_form);
               }
@@ -166,6 +136,12 @@ function replaceAuxiliaryVerbsWithUho() {
                 newtokens.push('り');
                 if (tokens[i+2].surface_form === 'ます' && tokens[i+2].pos === '助動詞'){
                   newtokens.push('やす');
+                }else if (tokens[i+2].surface_form === 'まし' && tokens[i+2].pos === '助動詞'){
+                  // 〜ました→〜やした
+                  newtokens.push('やし');
+                }else if (tokens[i+2].surface_form === 'ませ' && tokens[i+2].pos === '助動詞'){
+                  // 〜ません→〜やせん
+                  newtokens.push('やせ');
                 } else {
                   newtokens.push(tokens[i+2].surface_form);
                 }
@@ -181,6 +157,12 @@ function replaceAuxiliaryVerbsWithUho() {
           }else if (tokens[i].surface_form === 'ます' && tokens[i].pos === '助動詞'){
             // 〜ます→〜やす
             newtokens.push('やす');
+          }else if (tokens[i].surface_form === 'まし' && tokens[i].pos === '助動詞'){
+            // 〜ました→〜やした
+            newtokens.push('やし');
+          }else if (tokens[i].surface_form === 'ませ' && tokens[i].pos === '助動詞'){
+            // 〜ません→〜やせん
+            newtokens.push('やせ');
           }else if ((tokens[i].surface_form === 'ない' || tokens[i].reading === 'ナイ') && (tokens[i].pos === '助動詞' || tokens[i].pos === '形容詞')){
             // 〜ない→〜ねぇ
             newtokens.push('ねぇ');
