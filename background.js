@@ -238,6 +238,10 @@ function replaceAuxiliaryVerbsWithUho() {
               newtokens.push(tokens[i + 1].surface_form);
               i += 1;
             }
+          }else if (tokens[i].pos === "名詞" && (tokens[i + 1].surface_form === '！' || tokens[i + 1].surface_form === '。' || tokens[i + 1].surface_form === '\n')){
+            // 文末かつ（名詞）→（名詞）でい
+            newtokens.push(tokens[i].surface_form);
+            newtokens.push('でい');
           }else{
             newtokens.push(tokens[i].surface_form);
           }
