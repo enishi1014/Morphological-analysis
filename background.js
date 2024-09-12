@@ -99,7 +99,7 @@ function replaceAuxiliaryVerbsWithUho() {
                   newtokens.push(tokens[i+2].surface_form);
                 }
                 i += 2;
-              } else {
+              }else {
                 newtokens.push(tokens[i].surface_form);
                 newtokens.push(tokens[i+1].surface_form);
                 i += 1;
@@ -110,9 +110,24 @@ function replaceAuxiliaryVerbsWithUho() {
               // // 助詞「て」＋（動詞かつ　基本形が「しまう」）→「しま」を「ちま」に置き換え
               newtokens.push('ちまう');
               i += 1;
+            }else if (tokens[i+1].surface_form === 'しま' && tokens[i+1].pos === '動詞'){
+              newtokens.push("ちま");
+              i += 1;
             }else{
               newtokens.push(tokens[i].surface_form);
             }
+          }else if (tokens[i].pos === '動詞' && tokens[i+1].surface_form === 'ちゃっ' && tokens[i+1].pos === '動詞'){
+            newtokens.push(tokens[i].surface_form);
+            newtokens.push("ちまっ");
+            i += 1;
+          }else if (tokens[i].pos === '動詞' && tokens[i+1].surface_form === 'ちゃ' && tokens[i+1].pos === '動詞'){
+            newtokens.push(tokens[i].surface_form);
+            newtokens.push("ちま");
+            i += 1;
+          }else if (tokens[i].pos === '動詞' && tokens[i+1].surface_form === 'ちゃい' && tokens[i+1].pos === '動詞'){
+            newtokens.push(tokens[i].surface_form);
+            newtokens.push("ちまい");
+            i += 1;
           }else if (tokens[i].surface_form === 'で' && tokens[i].pos_detail_1 === '接続助詞'){
             // 〜でいます→〜どります
             if (tokens[i+1].basic_form === 'ます' && tokens[i+1].pos === '助動詞'){
