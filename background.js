@@ -32,6 +32,12 @@ function replaceAuxiliaryVerbsWithUho() {
       }
     }
     // 二人称→おめえ、おめえさん、てめえ
+    function norn_second_omee(surface_form){
+      const norn_second = ['あなた', 'きみ', 'おまえ', 'アナタ', 'キミ', 'オマエ'];
+      if (norn_second.includes(surface_form)) {
+        return 1;
+      }
+    }
     // 三人称→◯◯の旦那
 
     // 〜ています→〜とります(済)
@@ -103,7 +109,13 @@ function replaceAuxiliaryVerbsWithUho() {
                 newtokens.push('り');
                 newtokens.push('ます');
                 i += 2;
+              } else {
+                newtokens.push(tokens[i].surface_form);
+                newtokens.push(tokens[i+1].surface_form);
+                i += 1;
               }
+            }else{
+              newtokens.push(tokens[i].surface_form);
             }
           }else{
             newtokens.push(tokens[i].surface_form);
