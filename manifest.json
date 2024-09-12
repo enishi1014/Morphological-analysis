@@ -28,10 +28,10 @@
       }
     ],
     "icons": {
-      "16": "kakigori-kun-16.png",
-      "32": "kakigori-kun-32.png",
-      "48": "kakigori-kun-48.png",
-      "128": "kakigori-kun-128.png"
+      "16": "img/kakigori-kun-16.png",
+      "32": "img/kakigori-kun-32.png",
+      "48": "img/kakigori-kun-48.png",
+      "128": "img/kakigori-kun-128.png"
     }
   }
   
