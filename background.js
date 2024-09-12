@@ -45,13 +45,13 @@ function replaceAuxiliaryVerbsWithUho() {
         const tokens = tokenizer.tokenize(originalText);
 
         tokens.forEach(token => {
-          // console.log(token);  
+          console.log(token);  
         });
 
         var newtokens = [];
         for (let i = 0; i < tokens.length; i++) {
-          console.log(tokens[i]);
-          if (tokens[i] === undefined || tokens[i+1] === undefined){
+          // console.log(tokens[i]);
+          if (tokens[i] === undefined || tokens[i+1] === undefined || tokens[i+2] === undefined){
             newtokens.push(tokens[i].surface_form);
             continue;
           }else if (norn_first_asshi(tokens[i].surface_form)){
@@ -242,6 +242,21 @@ function replaceAuxiliaryVerbsWithUho() {
             // 文末かつ（名詞）→（名詞）でい
             newtokens.push(tokens[i].surface_form);
             newtokens.push('でい');
+          }else if (tokens[i].pos === "助動詞" && tokens[i].basic_form === "です" && 
+            (!(tokens[i + 1].surface_form === '！' || tokens[i + 1].surface_form === '。' || tokens[i + 1].surface_form === '\n') ||
+            !(tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n') ||
+            (tokens[i + 3]  && !(tokens[i + 3].surface_form === '！' || tokens[i + 3].surface_form === '。' || tokens[i + 3].surface_form === '\n')))
+          ){
+            // （文末ではない）かつ　助動詞　かつ　基本形＝「です」→「で」を「でごぜぇま」に置き換え
+            if (tokens[i].surface_form === 'です'){
+              newtokens.push('でごぜぇやす');
+            }else if (tokens[i].surface_form === 'でし'){
+              newtokens.push('でごぜぇやし');
+            }else if (tokens[i].surface_form === 'でしょ'){
+              newtokens.push('でごぜぇやしょ');
+            }else {
+              newtokens.push(tokens[i].surface_form);
+            }
           }else{
             newtokens.push(tokens[i].surface_form);
           }
