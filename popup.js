@@ -1,4 +1,11 @@
-document.getElementById("syrup").addEventListener("click", function () {
+const syrup = document.getElementById("syrup");
+const kakigorikun = document.getElementById("kakigorikun");
+var is_translating = false;
+
+syrup.addEventListener("click", function () {
+  
+  syrup.src = 'img/ICE_v2.gif';
+  kakigorikun.src = 'img/new-kakigori-kun_long.gif';
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (tabs.length === 0) {
