@@ -48,7 +48,7 @@ function replaceAuxiliaryVerbsWithUho() {
   styleElement.textContent = styleContent;
   document.head.appendChild(styleElement);
 
-    const backgroundUrl = chrome.runtime.getURL("img/matsuri-background.jpg");
+    const backgroundUrl = chrome.runtime.getURL("img/matsuri-background.png");
 
     // 背景を変更するスタイルを作成
     const backgroundStyleContent = `
@@ -57,6 +57,8 @@ function replaceAuxiliaryVerbsWithUho() {
       background-size: cover !important;
       background-repeat: no-repeat !important;
       background-attachment: fixed !important;
+      background-size: 100% auto; 
+
     }
     `;
 
