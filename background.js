@@ -48,6 +48,25 @@ function replaceAuxiliaryVerbsWithUho() {
   styleElement.textContent = styleContent;
   document.head.appendChild(styleElement);
 
+    const backgroundUrl = chrome.runtime.getURL("img/matsuri-background.png");
+
+    // 背景を変更するスタイルを作成
+    const backgroundStyleContent = `
+    body {
+      background-image: url('${backgroundUrl}') !important;
+      background-size: cover !important;
+      background-repeat: no-repeat !important;
+      background-attachment: fixed !important;
+      background-size: 100% auto; 
+
+    }
+    `;
+
+    // 背景用のスタイル要素を作成してページに追加
+    const backgroundStyleElement = document.createElement('style');
+    backgroundStyleElement.textContent = backgroundStyleContent;
+    document.head.appendChild(backgroundStyleElement);
+
     // 辞書
     // 一人称→あっし
 

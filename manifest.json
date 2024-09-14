@@ -17,7 +17,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["kuromoji.js", "dict/*.dat.gz", "fonts/*"],
+      "resources": ["kuromoji.js", "dict/*.dat.gz", "fonts/*", "img/*.png"],
       "matches": ["<all_urls>"]
     }
   ],
