@@ -1,10 +1,9 @@
 const syrup = document.getElementById("syrup");
 const kakigorikun = document.getElementById("kakigorikun");
-var is_translating = false;
 
 syrup.addEventListener("click", function () {
-  
-  syrup.src = 'img/ICE_v2.gif';
+
+  syrup.src = 'img/ICE-v3-onoff.gif';
   kakigorikun.src = 'img/new-kakigori-kun_long.gif';
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -15,7 +14,6 @@ syrup.addEventListener("click", function () {
       
     const tabId = tabs[0].id;
   
-
     injectScript(tabId, 'kuromoji.js').then(() => {
 
       return chrome.scripting.executeScript({
@@ -49,7 +47,6 @@ syrup.addEventListener("click", function () {
         }
         return textNodes;
       }
-  
   
       const textNodes = getTextNodesIn(document.body);
   
