@@ -1,4 +1,5 @@
 {
+
     "manifest_version": 3,
     "name": "textval",
     "version": "1.0",
@@ -32,6 +33,19 @@
       "32": "img/new-kakigori-kun-32.png",
       "48": "img/new-kakigori-kun-48.png",
       "128": "img/new-kakigori-kun-128.png"
+
     }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "16": "img/kakigori-kun-16.png",
+    "32": "img/kakigori-kun-32.png",
+    "48": "img/kakigori-kun-48.png",
+    "128": "img/kakigori-kun-128.png"
   }
-  
+}
