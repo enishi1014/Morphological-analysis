@@ -50,18 +50,37 @@ function replaceAuxiliaryVerbsWithUho() {
 
     // 辞書
     // 一人称→あっし
-    function norn_first_asshi(surface_form) {
-      const norn_first = ['私', '俺', '僕', 'わたし', 'わたくし', 'おれ', 'ぼく', 'ワタシ', 'オレ', 'ボク', 'オラ'];
+
+    function norn_first_asshi(surface_form){
+      const norn_first = [
+        '私', 'わたし', 'ワタシ', 'わたくし', 'ワタクシ', 'あたし', 'アタシ',
+        '俺', 'おれ', 'オレ', '僕', 'ぼく', 'ボク', 
+        'おら', 'オラ', 'おいら', 'オイラ',
+        'わい', 'ワイ', 'わし', 'ワシ',
+      ];
+
       if (norn_first.includes(surface_form)) {
         return 1;
       }
     }
     // 二人称→おめえ、おめえさん、てめえ
-    function norn_second_omee(surface_form) {
-      const norn_second = ['君', 'あなた', 'きみ', 'おまえ', 'アナタ', 'キミ', 'オマエ'];
+
+    function norn_second_omee(surface_form){
+      const norn_second = [
+        'あなた', 'アナタ',
+        '君', 'きみ', 'キミ', 
+        'お前', 'おまえ', 'オマエ',
+      ];
+
       if (norn_second.includes(surface_form)) {
         return 1;
       }
+    }
+    // 五段活用の連用形
+    function verb_whitch(basic_form){
+      const verb_godan_basic = ["く", "ぐ", "す", "つ", "ぬ", "ぶ", "む", "る", "う"];
+      const verb_godan_renyou = ["き", "ぎ", "し", "ち", "に", "び", "み", "り", "い"];
+      return verb_godan_renyou[verb_godan_basic.indexOf(basic_form.slice(-1))]
     }
 
     textNodes.forEach(textNode => {
@@ -72,13 +91,20 @@ function replaceAuxiliaryVerbsWithUho() {
         tokens.push({ surface_form: '' });
         var newtokens = [];
         for (let i = 0; i < tokens.length; i++) {
-          if (tokens[i].surface_form === '') {
+
+          console.log(tokens[i]);
+          if (tokens[i] === undefined || tokens[i].surface_form === ''){
             break;
-          } else if (tokens[i] === undefined || tokens[i + 1] === undefined || tokens[i + 2] === undefined) {
-            newtokens.push(tokens[i].surface_form);
-            continue;
+          // }else if (tokens[i] === undefined || tokens[i+1] === undefined || tokens[i+2] === undefined){
+          }else if (!tokens[i+1] || tokens[i+1] === undefined){
+            tokens.push({surface_form: ''});
+          }else if (!tokens[i+2] ||tokens[i+2] === undefined){
+            tokens.push({surface_form: ''});
           }
-          if (norn_first_asshi(tokens[i].surface_form)) {
+          if (tokens[i].word_type !== "KNOWN"){
+            newtokens.push(tokens[i].surface_form);
+          }else if (norn_first_asshi(tokens[i].surface_form)){
+
             // 一人称→あっし
             newtokens.push('あっし');
           } else if (norn_second_omee(tokens[i].surface_form)) {
@@ -235,8 +261,11 @@ function replaceAuxiliaryVerbsWithUho() {
             tokens[i + 1].pos === '助動詞'
           ) {
             // 名詞 + 助動詞「だ」「です」→ 名詞 + 「でい」
-            if (tokens[i + 2] && (tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n' || tokens[i + 2].surface_form === '')) {
-              newtokens.push(tokens[i].surface_form);
+
+            // if (tokens[i + 2] && (tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n' || tokens[i + 2].surface_form === '')) {
+            if (tokens[i + 2] && (tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n')) {
+              newtokens.push(tokens[i].surface_form); 
+
               newtokens.push('でい');
               i += 1;
             } else if (tokens[i + 2] && tokens[i + 2].pos === '終助詞') {
@@ -267,14 +296,62 @@ function replaceAuxiliaryVerbsWithUho() {
             } else {
               newtokens.push(tokens[i].surface_form);
             }
-          } else if (tokens[i].pos === "動詞" && tokens[i].conjugated_type === "一段" &&
-            tokens[i + 1].basic_form === "た" && tokens[i + 1].pos === "助動詞" &&
+
+          }else if (
+            tokens[i].pos === "動詞" && (tokens[i].conjugated_type === "一段" || tokens[i].conjugated_type === "サ変・スル") &&
+            tokens[i + 1].basic_form === "た" && tokens[i + 1].pos === "助動詞" && 
+
             (tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n' || tokens[i + 2].surface_form === '')
           ) {
             // 文末　かつ　（動詞　かつ　一段活用）＋（助動詞「た」）→「た」を「やし」に置き換え
             newtokens.push(tokens[i].surface_form);
             newtokens.push('やし');
-          } else if (tokens[i].surface_form !== '*') {
+
+          }else if (
+            tokens[i].pos === "動詞" && tokens[i].conjugated_type.slice(0, 2) === "五段" &&
+            tokens[i + 1].basic_form === "た" && tokens[i + 1].pos === "助動詞" && 
+            (tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n' || tokens[i + 2].surface_form === '')
+          ){
+            // 文末 かつ（動詞　かつ　五段活用◯行）＋（助動詞「た」）→ 動詞の最後の１文字を（◯行のイ段の１文字）で置き換える ＋「た」を「やした」に置き換る
+            newtokens.push(tokens[i].surface_form.slice(0, -1));
+            newtokens.push(verb_whitch(tokens[i].basic_form));
+            newtokens.push('やし');
+          }else if (
+            tokens[i].pos === "動詞" && tokens[i].conjugated_type === "一段" && (tokens[i].basic_form === tokens[i].surface_form) &&
+            ((tokens[i + 1].surface_form === '！' || tokens[i + 1].surface_form === '。' || tokens[i + 1].surface_form === '\n' || tokens[i + 1].surface_form === ''))
+          ){
+            // 文末　かつ　（一段活用の動詞）→ 動詞の最後の１文字を「やす」で置き換え
+            newtokens.push(tokens[i].surface_form.slice(0, -1));
+            newtokens.push('やす');
+          }else if (
+            tokens[i].pos === "動詞" && tokens[i].conjugated_type.slice(0, 2) === "五段" && (tokens[i].basic_form === tokens[i].surface_form) &&
+            (tokens[i + 1].surface_form === '！' || tokens[i + 1].surface_form === '。' || tokens[i + 1].surface_form === '\n' || tokens[i + 1].surface_form === '')
+          ){
+            // 文末　かつ　（動詞　かつ　一段活用）→（動詞）を（動詞）やすに置き換え
+            newtokens.push(tokens[i].surface_form.slice(0, -1));
+            newtokens.push(verb_whitch(tokens[i].basic_form));
+            newtokens.push('やす');
+          }else if (tokens[i].pos === "形容詞" && 
+            (tokens[i + 1].surface_form === '！' || tokens[i + 1].surface_form === '。' || tokens[i + 1].surface_form === '\n' || tokens[i + 1].surface_form === '')
+          ){
+            // 文末の（形容詞）→（形容詞）でごぜぇやす
+            newtokens.push(tokens[i].surface_form);
+            newtokens.push('でごぜぇやす');
+          }else if (tokens[i].pos === "形容詞" &&
+            ((tokens[i + 1].surface_form === "です" && tokens[i + 1].pos === "助動詞") || tokens[i + 1].pos_detail_1 === "終助詞") &&
+            (tokens[i + 2].surface_form === '！' || tokens[i + 2].surface_form === '。' || tokens[i + 2].surface_form === '\n' || tokens[i + 2].surface_form === '')
+          ){
+            // 文末の（形容詞）＋助動詞「です」→（形容詞）でごぜぇやす
+            newtokens.push(tokens[i].surface_form);
+            newtokens.push('でごぜぇやす');
+            // 文末の（形容詞）＋（任意の終助詞１つ）→（形容詞）を（形容詞）でごぜぇやすに置き換え
+            // 文末の（形容詞）＋助動詞「です」＋（任意の終助詞１つ）→（形容詞）を（形容詞）でごぜぇやすに置き換え
+            if (tokens[i + 1].pos_detail_1 === "終助詞"){
+              newtokens.push(tokens[i + 1].surface_form);
+            }
+            i += 1;
+          }else {
+
             newtokens.push(tokens[i].surface_form);
           }
         }
