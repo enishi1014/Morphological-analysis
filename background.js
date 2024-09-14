@@ -58,7 +58,8 @@ function replaceAuxiliaryVerbsWithUho() {
       background-repeat: no-repeat !important;
       background-attachment: fixed !important;
       background-size: 100% auto; 
-
+      background-color:rgba(255,255,255,0.84);
+      background-blend-mode:lighten;
     }
     `;
 
