@@ -17,7 +17,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["kuromoji.js", "dict/*.dat.gz", "fonts/*", "img/*.png"],
+      "resources": ["kuromoji.js", "dict/*.dat.gz", "fonts/*", "img/*.png", "img/*.gif", "maou_bgm_ethnic09.mp3"],
       "matches": ["<all_urls>"]
     }
   ],

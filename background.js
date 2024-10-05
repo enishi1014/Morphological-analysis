@@ -68,6 +68,19 @@ function replaceAuxiliaryVerbsWithUho() {
     backgroundStyleElement.textContent = backgroundStyleContent;
     document.head.appendChild(backgroundStyleElement);
 
+    // GIF画像用のスタイル要素を作成してページに追加
+    const omikoshiUrl = chrome.runtime.getURL("img/omikoshi_walking-long.gif");
+    const omikoshiImage = document.createElement('img');
+    omikoshiImage.src = omikoshiUrl;
+    omikoshiImage.style.position = 'fixed';
+    omikoshiImage.style.top = '70.5%';
+    omikoshiImage.style.left = '0%';
+    omikoshiImage.style.width = '120%'; // 幅を百分率で指定
+    omikoshiImage.style.height = 'auto'; // 高さを自動調整
+    omikoshiImage.style.zIndex = '1000'; // 他の要素の上に表示するためのスタイル
+    omikoshiImage.style.pointerEvents = 'none'; // 画像がクリックを妨げないようにする
+    document.body.appendChild(omikoshiImage);
+
     // 辞書
     // 一人称→あっし
 
