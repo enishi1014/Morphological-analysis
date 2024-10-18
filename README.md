@@ -4,15 +4,15 @@ texlvalは、ウェブページ上の文章を形態素解析し、江戸っ子�
 その後、技育展（2024年10月）、技育博（2024年12月）に向けて継続開発を行っています。
 
 - 変換機能
-  - テンプレート作成：@enishi1014
-  - 形態素解析：@enishi1014、@esusaki、@sp1st
-  - 辞書作成：@esusaki
-  - 実装：@enishi1014
+  - テンプレート作成：[@enishi1014](https://github.com/enishi1014)
+  - 形態素解析：[@enishi1014](https://github.com/enishi1014)、[@esusaki](https://github.com/esusaki)、[@sp1st](https://github.com/sp1st)
+  - 辞書作成：[@esusaki](https://github.com/esusaki)
+  - 実装：[@enishi1014](https://github.com/enishi1014)、[@sp1st](https://github.com/sp1st)
 - デザイン
-  - ポップアップ：@esusaki
-  - ロゴ：@enishi1014
-  - 各種GIF：@sp1st
-- デモページ：@esusaki、@sp1st
+  - ポップアップ：[@esusaki](https://github.com/esusaki)
+  - ロゴ：[@enishi1014](https://github.com/enishi1014)
+  - 各種GIF：[@sp1st](https://github.com/sp1st)
+- デモページ：[@esusaki](https://github.com/esusaki)、[@sp1st](https://github.com/sp1st)
 
 ## 作品URL
 - [拡張機能](https://chromewebstore.google.com/detail/textval/edhdcmcmaiakchhcembkhonndipcmeob)
