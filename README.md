@@ -17,6 +17,7 @@ texlvalは、ウェブページ上の文章を形態素解析し、江戸っ子�
 ## 作品URL
 - [拡張機能](https://chromewebstore.google.com/detail/textval/edhdcmcmaiakchhcembkhonndipcmeob)
 - [デモページ](https://demo-textval.vercel.app)
+  - [リポジトリ](https://github.com/esusaki/textval-demo)
 - [スライド](https://www.canva.com/design/DAGQtqYvvWQ/7CXX0bMEJeLtTCfojMpGJw/view)
 
 ## 機能
