@@ -3,26 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <title>textval</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 10px;
-      color:white
-    }
-    #syrup{
-      cursor:pointer
-    }
-  </style>
+  <link rel="stylesheet" href="popup_style.css">
 </head>
 <body style="text-align: center;background-color: rgb(44, 48, 57);">
   <img src="img/odango.gif" alt="textvalと書かれた団子" width="300px">
-  <p style="font-size: 14px;letter-spacing: 2px;">
-  文章をお祭りっぽく翻訳しやす</p>
-  <img src="img/ICE-v3-onoff-first.webp" alt="かきごおりのシロップ・スイッチ" width="140px" id="syrup">
-  <div>
-    <img src="img/new-kakigori-kun-128.png" alt="かきごおり化しつつあるニンゲン" width="160px" id="kakigorikun">
-    <audio id="sounds" src="maou_bgm_ethnic09.mp3" preload="auto"></audio>
+
+  <div id="tab_normal">
+    <p style="font-size: 14px;letter-spacing: 2px;">
+    文章をお祭りっぽく翻訳しやす
+    </p>
+    <img src="img/ICE-v3-onoff-first.webp" alt="かきごおりのシロップ・スイッチ" width="140px" id="syrup">
+    <div>
+      <img src="img/new-kakigori-kun-128.png" alt="かきごおり化しつつあるニンゲン" width="160px" id="kakigorikun">
+      <audio id="sounds" src="maou_bgm_ethnic09.mp3" preload="auto"></audio>
+    </div>
   </div>
+
+  <div id="tab_pomodoro">
+    <p style="font-size: 14px;letter-spacing: 2px;">ポモドーロタイマーでい</p>
+
+    <div style="font-size: 16px;" id="timeFormContainer">
+      <div class="timeForm"> 💻作業 <input type="number" value="25" id="sagyouTimeInput" style="text-align: center;margin: 5px;border-radius: 5px; background-color: white;border: none;font-size: 22px;width: 40px;color: #555;">分</div>
+      <div class="timeForm"> 🏮休憩 <input type="number" value="5" id="kyukeiTimeInput" style="text-align: center;margin: 5px;border-radius: 5px;background-color: white;border: none;font-size: 22px;width: 40px;color: #555;">分</div>
+    </div>
+
+    <div id="showTimer">
+      <div style="margin: 5px;">💻作業 <span class="timer">15:20</span></div>
+    </div>
+
+    <button class="pomodoro_buttons" style="background-color: #884;" id="startButton">▶ 開始</button> 
+    <button class="pomodoro_buttons" style="background-color: #e77;" id="stopButton" disabled>■ 終了</button>
+
+  </div>
+
+  <div style="text-align: right;">
+    <img src="img/kirikae-button.png" alt="切り替えボタン" width="30px" id="switch-button">
+  </div>
+
   <script src="popup.js"></script>
+  <script src="pomodoro_ui.js"></script>
+
 </body>
 </html>

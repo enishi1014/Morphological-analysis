@@ -1,0 +1,43 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 10px;
+    color:white
+  }
+  #syrup{
+    cursor:pointer
+  }
+  .timeForm{
+    /* background-color: white;
+    background-image: url("img/mokume2.jpg"); */
+    margin: auto;
+    width: fit-content;
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 7px;
+    /* color: black; */
+    color: white;
+  }
+
+  #showTimer {
+    font-size: 16px;
+  }
+
+  .timer{
+    font-size: 22px;
+  }
+
+  .pomodoro_buttons{
+    padding: 5px;
+    margin: 5px;
+    border-radius: 10px;
+    width: 80px;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+
+  .disabledButtonStyle {
+    background-color: gray !important;
+    color: lightgray;
+    cursor: none;
+  }
