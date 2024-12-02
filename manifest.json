@@ -7,7 +7,10 @@
     "activeTab",
     "contextMenus",
     "scripting",
-    "tabs"
+    "tabs",
+    "alarms",
+    "notifications",
+    "storage"
   ],
   "background": {
     "service_worker": "background.js"
@@ -20,6 +23,9 @@
       "resources": ["kuromoji.js", "dict/*.dat.gz", "fonts/*", "img/*.png", "img/*.gif", "maou_bgm_ethnic09.mp3"],
       "matches": ["<all_urls>"]
     }
+  ],
+  "host_permissions": [
+    "<all_urls>"
   ],
   "content_scripts": [
     {
