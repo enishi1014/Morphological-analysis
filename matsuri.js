@@ -412,12 +412,42 @@ function replaceAuxiliaryVerbsWithUho(showOmikoshi) {
         hideOmikoshiFunction();
       }
     });
+
+    // 季節を判定する関数
+    function getSeason(){
+      const now = new Date();
+      const currentYear = now.getFullYear();
+
+      const startChristmasMonth = 12;
+      const startChristmasDay = 1;
+      const endChristmasMonth = 12;
+      const endChristmasDay = 25;
+
+      const startChristmas = new Date(currentYear, startChristmasMonth - 1, startChristmasDay); // 12月1日の0時0分から
+      const endChristmas = new Date(currentYear, endChristmasMonth - 1, endChristmasDay + 1); // 12月26日の0時0分まで
+
+      if (now >= startChristmas && now <= endChristmas){
+        return "Christmas"
+      } else {
+        return "Normal"
+      }
+    }
   
     // 神輿を表示する関数
     function showOmikoshiFunction() {
       const existingOmikoshi = document.getElementById('omikoshiImage');
       if (!existingOmikoshi) {
-        const omikoshiUrl = chrome.runtime.getURL('img/omikoshi_walking-long.gif');
+
+        const season = getSeason();
+        var omikoshiUrl;
+
+        if (season == "Normal"){
+          omikoshiUrl = chrome.runtime.getURL('img/omikoshi_walking-long.gif');
+        } else {
+          omikoshiUrl = chrome.runtime.getURL('img/Christmas.gif');
+        }
+
+        // const omikoshiUrl = chrome.runtime.getURL('img/omikoshi_walking-long.gif');
         const omikoshiImage = document.createElement('img');
         omikoshiImage.id = 'omikoshiImage';
         omikoshiImage.src = omikoshiUrl;
