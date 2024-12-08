@@ -42,31 +42,55 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-// アラームリスナーの登録
+/// アラームリスナーの登録
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "pomodoroTimer") {
-    if (isWorkPeriod) {
-      isWorkPeriod = false;
-      notifyUser("作業時間が終了しました。休憩を始めましょう！");
-      startBreakPeriod();
+    if (isRunning) {
+      if (isWorkPeriod) {
+        isWorkPeriod = false;
+        notifyUser("作業時間が終了しました。休憩を始めましょう！");
+        startBreakPeriod();
 
-      // 休憩開始をコンテンツスクリプトに通知
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]) {
-          chrome.tabs.sendMessage(tabs[0].id, { command: "startBreak" });
-        }
-      });
-    } else {
-      isWorkPeriod = true;
-      notifyUser("休憩が終了しました。作業を再開しましょう！");
-      startWorkPeriod();
+        // 休憩開始をコンテンツスクリプトに通知
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          if (tabs[0]) {
+            // kuromoji.js と matsuri.js をインジェクト
+            chrome.scripting.executeScript({
+              target: { tabId: tabs[0].id },
+              files: ['kuromoji.js', 'matsuri.js']
+            }, () => {
+              // メッセージを送信
+              chrome.tabs.sendMessage(tabs[0].id, { command: "startBreak" });
+            });
+          }
+        });
 
-      // 作業開始をコンテンツスクリプトに通知
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]) {
-          chrome.tabs.sendMessage(tabs[0].id, { command: "startWork" });
-        }
-      });
+        // ポップアップにタイマー表示の更新を指示
+        chrome.runtime.sendMessage({ command: "updateTimer" });
+
+      } else {
+        isWorkPeriod = true;
+        notifyUser("休憩が終了しました。作業を再開しましょう！");
+        startWorkPeriod();
+
+        // 作業開始をコンテンツスクリプトに通知
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          if (tabs[0]) {
+            // kuromoji.js と matsuri.js をインジェクト
+            chrome.scripting.executeScript({
+              target: { tabId: tabs[0].id },
+              files: ['kuromoji.js', 'matsuri.js']
+            }, () => {
+              // メッセージを送信
+              chrome.tabs.sendMessage(tabs[0].id, { command: "startWork" });
+            });
+          }
+        });
+
+        // ポップアップにタイマー表示の更新を指示
+        chrome.runtime.sendMessage({ command: "updateTimer" });
+
+      }
     }
   }
 });
@@ -109,11 +133,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       target: { tabId: tab.id },
       files: ['kuromoji.js', 'matsuri.js']
     }, () => {
-      // お祭り変換の関数を実行
+      // お祭り変換の関数を実行（神輿は表示しない）
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: () => {
-          replaceAuxiliaryVerbsWithUho(true);
+          replaceAuxiliaryVerbsWithUho(false);
         }
       });
     });

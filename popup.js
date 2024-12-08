@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const stopButton = document.getElementById('stopButton');
   const sagyouTimeInput = document.getElementById('sagyouTimeInput');
   const kyukeiTimeInput = document.getElementById('kyukeiTimeInput');
+  const periodLabel = document.getElementById('periodLabel');
 
   let timerInterval;
 
@@ -141,6 +142,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // タイマー表示を更新
       updateTimerDisplay();
+
+      // 作業終了時にページをリロードして元に戻す
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.reload(tabs[0].id);
+      });
     });
 
     startButton.disabled = false;
@@ -171,30 +177,45 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error(chrome.runtime.lastError.message);
         return;
       }
-
+  
       if (response && response.isRunning) {
         chrome.runtime.sendMessage({ command: "getAlarmInfo" }, (alarmResponse) => {
           if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError.message);
             return;
           }
-
+  
           if (alarmResponse && alarmResponse.scheduledTime) {
-            const timeRemaining = alarmResponse.scheduledTime - Date.now();
-            displayTime(timeRemaining, response.isWorkPeriod);
-
             if (timerInterval) {
               clearInterval(timerInterval);
             }
-
+  
             timerInterval = setInterval(() => {
-              const timeLeft = alarmResponse.scheduledTime - Date.now();
-              if (timeLeft >= 0) {
-                displayTime(timeLeft, response.isWorkPeriod);
-              } else {
-                clearInterval(timerInterval);
-                updateTimerDisplay();
-              }
+              chrome.runtime.sendMessage({ command: "getTimerStatus" }, (newResponse) => {
+                if (chrome.runtime.lastError) {
+                  console.error(chrome.runtime.lastError.message);
+                  return;
+                }
+  
+                chrome.runtime.sendMessage({ command: "getAlarmInfo" }, (newAlarmResponse) => {
+                  if (chrome.runtime.lastError) {
+                    console.error(chrome.runtime.lastError.message);
+                    return;
+                  }
+  
+                  if (newAlarmResponse && newAlarmResponse.scheduledTime) {
+                    const timeLeft = newAlarmResponse.scheduledTime - Date.now();
+                    if (timeLeft >= 0) {
+                      displayTime(timeLeft, newResponse.isWorkPeriod);
+                    } else {
+                      clearInterval(timerInterval);
+                      updateTimerDisplay();
+                    }
+                  } else {
+                    document.querySelector('.timer').textContent = "00:00";
+                  }
+                });
+              });
             }, 1000);
           } else {
             document.querySelector('.timer').textContent = "00:00";
@@ -217,15 +238,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const timerElement = document.querySelector('.timer');
     timerElement.textContent = `${padZero(minutes)}:${padZero(seconds)}`;
 
-    const periodLabel = isWorkPeriod ? "💻作業" : "🏮休憩";
-    timerElement.previousSibling.textContent = periodLabel + " ";
+    // 現在の期間に応じてラベルを変更
+    periodLabel.textContent = isWorkPeriod ? "💻作業" : "🏮休憩";
   }
 
   function padZero(num) {
     return num < 10 ? '0' + num : num;
   }
 
-  // メッセージリスナーを追加してタイマー表示を更新
+  // バックグラウンドからのメッセージを受信してタイマー表示を更新
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.command === "updateTimer") {
       updateTimerDisplay();
