@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "textval",
-  "version": "1.0",
+  "version": "1.1",
   "description": "ブラウザ上の文章をお祭りっぽく変換します。",
   "permissions": [
     "activeTab",
