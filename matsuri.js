@@ -426,9 +426,19 @@ function replaceAuxiliaryVerbsWithUho(showOmikoshi) {
     const startChristmas = new Date(currentYear, startChristmasMonth - 1, startChristmasDay); // 12月1日の0時0分から
     const endChristmas = new Date(currentYear, endChristmasMonth - 1, endChristmasDay + 1); // 12月26日の0時0分まで
 
+    const startNewYearMonth = 1;
+    const startNewYearDay = 1;
+    const endNewYearMonth = 1;
+    const endNewYearDay = 7;
+
+    const startNewYear = new Date(currentYear, startNewYearMonth - 1, startNewYearDay); // 1月1日の0時0分から
+    const endNewYear = new Date(currentYear, endNewYearMonth - 1, endNewYearDay + 1); // 1月8日の0時0分まで
+
     if (now >= startChristmas && now <= endChristmas){
       return "Christmas"
-    } else {
+    } else if (now >= startNewYear && now <= endNewYear && ((currentYear - 3) % 12  == 6)){
+      return "NewYear_snake"
+    } else{
       return "Normal"
     }
   }
@@ -443,7 +453,9 @@ function replaceAuxiliaryVerbsWithUho(showOmikoshi) {
 
       if (season == "Normal"){
         omikoshiUrl = chrome.runtime.getURL('img/omikoshi_walking-long.gif');
-      } else {
+      } else if (season == "NewYear_snake"){
+        omikoshiUrl = chrome.runtime.getURL('img/NewYear_snake.gif');
+      }else {
         omikoshiUrl = chrome.runtime.getURL('img/Christmas.gif');
       }
 
