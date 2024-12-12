@@ -434,12 +434,14 @@ function replaceAuxiliaryVerbsWithUho(showOmikoshi) {
     const startNewYear = new Date(currentYear, startNewYearMonth - 1, startNewYearDay); // 1月1日の0時0分から
     const endNewYear = new Date(currentYear, endNewYearMonth - 1, endNewYearDay + 1); // 1月8日の0時0分まで
 
-    if (now >= startChristmas && now <= endChristmas){
-      return "Christmas"
-    } else if (now >= startNewYear && now <= endNewYear && ((currentYear - 3) % 12  == 6)){
-      return "NewYear_snake"
-    } else{
-      return "Normal"
+    if (now >= startChristmas && now <= endChristmas) {
+      const daysUntilChristmas = Math.ceil((endChristmas - now) / (1000 * 60 * 60 * 24) - 1);
+      return { season: "Christmas", daysUntilEvent: daysUntilChristmas };
+    } else if (now >= startNewYear && now <= endNewYear && ((currentYear - 3) % 12 == 6)) {
+      const daysUntilNewYear = Math.ceil((endNewYear - now) / (1000 * 60 * 60 * 24) - 1);
+      return { season: "NewYear_snake", daysUntilEvent: daysUntilNewYear };
+    } else {
+      return { season: "None", daysUntilEvent: null };
     }
   }
 
@@ -448,15 +450,19 @@ function replaceAuxiliaryVerbsWithUho(showOmikoshi) {
     const existingOmikoshi = document.getElementById('omikoshiImage');
     if (!existingOmikoshi) {
 
-      const season = getSeason();
+      const seasonInfo = getSeason();
       var omikoshiUrl;
+      var omikoshiDescription;
 
-      if (season == "Normal"){
+      if (seasonInfo.season == "Normal"){
         omikoshiUrl = chrome.runtime.getURL('img/omikoshi_walking-long.gif');
-      } else if (season == "NewYear_snake"){
+        omikoshiDescription = "お祭りでい";
+      } else if (seasonInfo.season == "NewYear_snake"){
         omikoshiUrl = chrome.runtime.getURL('img/NewYear_snake.gif');
+        omikoshiDescription = `1/1 元旦<br>------------------------<br>あと ${seasonInfo.daysUntilEvent}日`;
       }else {
         omikoshiUrl = chrome.runtime.getURL('img/Christmas.gif');
+        omikoshiDescription = `12/25 クリスマス<br>------------------------<br>あと ${seasonInfo.daysUntilEvent}日`;
       }
 
       // const omikoshiUrl = chrome.runtime.getURL('img/omikoshi_walking-long.gif');
@@ -469,8 +475,39 @@ function replaceAuxiliaryVerbsWithUho(showOmikoshi) {
       omikoshiImage.style.width = '120%';
       omikoshiImage.style.height = 'auto';
       omikoshiImage.style.zIndex = '1000';
-      omikoshiImage.style.pointerEvents = 'none';
+      // omikoshiImage.style.pointerEvents = 'none';
+      omikoshiImage.style.cursor = "pointer";
+      // omikoshiImage.title = omikoshiDescription
       document.body.appendChild(omikoshiImage);
+
+      const omikoshiText = document.createElement('div');
+      omikoshiText.id = 'omikoshiText';
+      omikoshiText.innerHTML = omikoshiDescription;
+      omikoshiText.style.position = 'fixed';
+      omikoshiText.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+      omikoshiText.style.color = 'white';
+      omikoshiText.style.padding = '5px';
+      omikoshiText.style.borderRadius = '5px';
+      omikoshiText.style.visibility = 'hidden';
+      omikoshiText.style.zIndex = '1001';
+      omikoshiText.style.textAlign = 'center';
+      document.body.appendChild(omikoshiText);
+
+      // omikoshiImageにホバーイベントを追加
+      omikoshiImage.addEventListener('mouseover', (event) => {
+        omikoshiText.style.top = `${event.clientY + 10}px`;
+        omikoshiText.style.left = `${event.clientX + 10}px`;
+        omikoshiText.style.visibility = 'visible';
+      });
+
+      omikoshiImage.addEventListener('mousemove', (event) => {
+        omikoshiText.style.top = `${event.clientY + 10}px`;
+        omikoshiText.style.left = `${event.clientX + 10}px`;
+      });
+
+      omikoshiImage.addEventListener('mouseout', () => {
+        omikoshiText.style.visibility = 'hidden';
+      });
     }
   }
 
