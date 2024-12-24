@@ -445,6 +445,21 @@ function replaceAuxiliaryVerbsWithUho(showOmikoshi) {
     }
   }
 
+
+  // 重み付きランダム関数
+  const weightedRandom = (items, weights) => {
+    const cumulativeWeights = [];
+    for (let i = 0; i < weights.length; i++) {
+      cumulativeWeights[i] = weights[i] + (cumulativeWeights[i - 1] || 0);
+    }
+    const random = Math.random() * cumulativeWeights[cumulativeWeights.length - 1];
+    for (let i = 0; i < cumulativeWeights.length; i++) {
+      if (random < cumulativeWeights[i]) {
+        return items[i];
+      }
+    }
+  };
+
   // 神輿を表示する関数
   function showOmikoshiFunction() {
     const existingOmikoshi = document.getElementById('omikoshiImage');
@@ -459,11 +474,20 @@ function replaceAuxiliaryVerbsWithUho(showOmikoshi) {
         omikoshiDescription = "お祭りでい";
       } else if (seasonInfo.season == "NewYear_snake"){
         omikoshiUrl = chrome.runtime.getURL('img/NewYear_snake.gif');
-        omikoshiDescription = `1/1 元旦<br>------------------------<br>あと ${seasonInfo.daysUntilEvent}日`;
+        if (seasonInfo.daysUntilEvent === 0) {
+          omikoshiDescription = `1/1 元旦<br>------------------------<br>今日はお正月🎍`;
+        } else {
+          omikoshiDescription = `1/1 元旦<br>------------------------<br>あと ${seasonInfo.daysUntilEvent}日`;
+        }
       }else {
         christmasImg = ['img/Christmas.gif', 'img/Christmas_south.gif'];
-        omikoshiUrl = chrome.runtime.getURL(christmasImg[Math.floor(Math.random() * christmasImg.length)]);
-        omikoshiDescription = `12/25 クリスマス<br>------------------------<br>あと ${seasonInfo.daysUntilEvent}日`;
+        weights = [0.75, 0.25];
+        omikoshiUrl = chrome.runtime.getURL(weightedRandom(christmasImg, weights));
+        if (seasonInfo.daysUntilEvent === 0) {
+          omikoshiDescription = `12/25 クリスマス<br>------------------------<br>今日はクリスマス🎄`;
+        } else {
+          omikoshiDescription = `12/25 クリスマス<br>------------------------<br>あと ${seasonInfo.daysUntilEvent}日`;
+        }
       }
 
       // const omikoshiUrl = chrome.runtime.getURL('img/omikoshi_walking-long.gif');
