@@ -461,7 +461,8 @@ function replaceAuxiliaryVerbsWithUho(showOmikoshi) {
         omikoshiUrl = chrome.runtime.getURL('img/NewYear_snake.gif');
         omikoshiDescription = `1/1 元旦<br>------------------------<br>あと ${seasonInfo.daysUntilEvent}日`;
       }else {
-        omikoshiUrl = chrome.runtime.getURL('img/Christmas.gif');
+        christmasImg = ['img/Christmas.gif', 'img/Christmas_south.gif'];
+        omikoshiUrl = chrome.runtime.getURL(christmasImg[Math.floor(Math.random() * christmasImg.length)]);
         omikoshiDescription = `12/25 クリスマス<br>------------------------<br>あと ${seasonInfo.daysUntilEvent}日`;
       }
 
